@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Guesses from './Guesses';
 import Gamefeedback from './Gamefeedback';
-
 
 export default function Game({ googleId }) {
   const secretCode = generateCode();
@@ -14,7 +13,6 @@ export default function Game({ googleId }) {
   const [partials, setPartials] = useState(null);
   const [hasWon, setHasWon] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
-
 
   function generateCode() {
     const colours = ['R', 'G', 'B', 'Y', 'O', 'P'];
@@ -98,23 +96,70 @@ export default function Game({ googleId }) {
     setPartials(currentPartials);
   }
 
+  const [userScores, setUserScores] = useState([]);
+  useEffect(() => {
+    fetchUserScores();
+  }, [googleId]);
+
+  async function fetchUserScores() {
+    try {
+      const response = await axios.get(
+        `https://endtoend-405500.uw.r.appspot.com/findByGoogleId?googleId=${googleId}`);
+      setUserScores(response.data);
+    } catch (error) {
+      console.error('Error fetching user scores:', error);
+    }
+  }
+
   const saveGameToDatabase = async () => {
     const gameData = {
       googleId: googleId,
       score: score,
-      date: new Date(), // Save the date as a Date object
+      date: 'a date', // Save the date as a Date object
     };
 
     try {
-      await axios.post('https://decisive-talon-404519.wl.r.appspot.com/saveGameRecord', gameData, { withCredentials: true });
+      await axios.post(
+        'https://endtoend-405500.uw.r.appspot.com/saveGameRecord',
+        gameData);
     } catch (error) {
       console.error('Error saving game:', error);
     }
   };
 
+  const [topScores, setTopScores] = useState([]);
+
+  useEffect(() => {
+    fetchTopScores();
+  }, []);
+
+  async function fetchTopScores() {
+    try {
+      const response = await axios.get('https://endtoend-405500.uw.r.appspot.com/topOverallScores');
+      setTopScores(response.data);
+    } catch (error) {
+      console.error('Error fetching top scores:', error);
+    }
+  }
+
   return (
     <>
       <div>You are in game view.</div>
+
+      <h2>Top Overall Scores:</h2>
+      <ul>
+        {topScores.map((score, index) => (
+          <li key={index}>{`Google ID: ${score.googleId}, Score: ${score.score}, Date: ${score.date}`}</li>
+        ))}
+      </ul>
+
+      <h2>Your Scores:</h2>
+      <ul>
+        {userScores.map((score, index) => (
+          <li key={index}>{`Google ID: ${score.googleId}, Score: ${score.score}, Date: ${score.date}`}</li>
+        ))}
+      </ul>
+
       <label>
         <input
           type="text"
