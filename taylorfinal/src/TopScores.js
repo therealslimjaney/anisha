@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TopScores = ({ topScores, goBackToGame }) => {
+const TopScores = ({ goBackToGame }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10); // Set your desired page size
     const [totalPages, setTotalPages] = useState(1);
+    const [topScores, setTopScores] = useState([]);
 
     const fetchTopScores = async (page) => {
         try {
@@ -12,8 +13,7 @@ const TopScores = ({ topScores, goBackToGame }) => {
             setTotalPages(response.data.totalPages);
             // Assuming the response structure includes a 'content' property containing the array of GameRecord
             const { content } = response.data;
-            // Handle the fetched data (e.g., set it to a state)
-            // setTopScores(content);
+            setTopScores(content);
         } catch (error) {
             console.error('Error fetching top scores:', error);
         }
@@ -32,9 +32,11 @@ const TopScores = ({ topScores, goBackToGame }) => {
             <div>
                 <h2>Top Scores</h2>
                 {/* Render your top scores list here */}
-                {topScores.map((score) => (
-                    <div key={score.id}>
-                        {score.username} - {score.score}
+                {topScores.map((gameRecord) => (
+                    <div key={gameRecord.id}>
+                        <span>Google ID: {gameRecord.googleid} - </span>
+                        <span>Score: {gameRecord.score} - </span>
+                        <span>Date: {gameRecord.date}</span>
                     </div>
                 ))}
             </div>
