@@ -34,7 +34,7 @@ const TopScores = ({ goBackToGame }) => {
                 {/* Render your top scores list here */}
                 {topScores.map((gameRecord) => (
                     <div key={gameRecord.id}>
-                        <span>Google ID: {gameRecord.googleid} - </span>
+                        <span>Google ID: {gameRecord.googleId} - </span>
                         <span>Score: {gameRecord.score} - </span>
                         <span>Date: {gameRecord.date}</span>
                     </div>
