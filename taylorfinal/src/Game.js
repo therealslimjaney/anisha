@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Guesses from './Guesses';
 import Gamefeedback from './Gamefeedback';
+import MyGames from './MyGames';
+import TopScores from './TopScores';
 
 export default function Game({ googleId }) {
   const secretCode = generateCode();
   const [currentGuess, setCurrentGuess] = useState('');
-  const [guesses, setGuesses] = useState([]); // Initialize as an empty array
+  const [guesses, setGuesses] = useState([]);
   const [guessesLeft, setGuessesLeft] = useState(10);
   const [score, setScore] = useState(100);
   const [exacts, setExacts] = useState(null);
@@ -15,6 +17,9 @@ export default function Game({ googleId }) {
   const [showOptions, setShowOptions] = useState(false);
   const [userScores, setUserScores] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [newUsername, setNewUsername] = useState('');
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [currentView, setCurrentView] = useState('game');
 
   function generateCode() {
     const colours = ['R', 'G', 'B', 'Y', 'O', 'P'];
@@ -33,7 +38,6 @@ export default function Game({ googleId }) {
   }, [exacts, guessesLeft]);
 
   function resetGame() {
-    // Reset all the state variables to their initial values
     setGuesses([]);
     setGuessesLeft(10);
     setScore(100);
@@ -49,10 +53,7 @@ export default function Game({ googleId }) {
 
     if (guessesLeft > 0) {
       setGuessesLeft((prevGuessesLeft) => prevGuessesLeft - 1);
-
       countMatches();
-
-      // Update the guesses array
       setGuesses([...guesses, { guess: currentGuess, exacts, partials }]);
 
       if (exacts === 4) {
@@ -74,21 +75,17 @@ export default function Game({ googleId }) {
     const secretCodeArray = secretCode.split('');
     const guessArray = currentGuess.split('');
 
-    // Count exact matches
     for (let i = 0; i < 4; i++) {
       if (guessArray[i] === secretCodeArray[i]) {
         currentExacts++;
-        // Mark the matched elements to avoid double counting
         guessArray[i] = '_';
         secretCodeArray[i] = '_';
       }
     }
 
-    // Count partial matches
     for (let i = 0; i < 4; i++) {
       if (guessArray[i] !== '_' && secretCodeArray.includes(guessArray[i])) {
         currentPartials++;
-        // Mark the matched element to avoid double counting
         const secretIndex = secretCodeArray.indexOf(guessArray[i]);
         secretCodeArray[secretIndex] = '_';
       }
@@ -102,13 +99,14 @@ export default function Game({ googleId }) {
     const gameData = {
       googleId: googleId,
       score: score,
-      date: 'a date', // Save the date as a Date object
+      date: 'a date',
     };
 
     try {
       await axios.post(
         'https://endtoend-405500.uw.r.appspot.com/saveGameRecord',
-        gameData);
+        gameData
+      );
     } catch (error) {
       console.error('Error saving game:', error);
     }
@@ -122,7 +120,9 @@ export default function Game({ googleId }) {
 
   async function fetchTopScores() {
     try {
-      const response = await axios.get('https://endtoend-405500.uw.r.appspot.com/topOverallScores');
+      const response = await axios.get(
+        'https://endtoend-405500.uw.r.appspot.com/topOverallScores'
+      );
       setTopScores(response.data);
     } catch (error) {
       console.error('Error fetching top scores:', error);
@@ -134,10 +134,9 @@ export default function Game({ googleId }) {
       const response = await axios.get(
         `https://endtoend-405500.uw.r.appspot.com/findByGoogleId?googleId=${googleId}&page=${currentPage}&size=10`
       );
-  
-      // Assuming the response structure includes a 'content' property containing the array of GameRecord
+
       const { content } = response.data;
-  
+
       setUserScores(content);
     } catch (error) {
       console.error('Error fetching user scores:', error);
@@ -147,39 +146,123 @@ export default function Game({ googleId }) {
   useEffect(() => {
     fetchUserScores();
   }, [googleId, currentPage]);
-  
-  // Add a function to handle pagination
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  return (
-    <>
-      <div>You are in game view.</div>
+  const handleUsernameChange = () => {
+    setIsEditingUsername(true);
+  };
+
+  const handleSubmitUsername = async () => {
+    try {
+      await axios.post(
+        'https://your-api-endpoint/updateUsername',
+        { googleId, newUsername }
+      );
+      console.log('Username updated successfully');
+    } catch (error) {
+      console.error('Error updating username:', error);
+    }
+
+    setNewUsername('');
+    setIsEditingUsername(false);
+  };
+
+  const renderUsernameForm = () => (
+    <div>
       <label>
+        New Username:
         <input
           type="text"
-          maxLength={4}
-          value={currentGuess}
-          onChange={(e) => setCurrentGuess(e.target.value)}
+          value={newUsername}
+          onChange={(e) => setNewUsername(e.target.value)}
         />
-        <button onClick={handleGuess} type="button">
-          Submit Guess
-        </button>
       </label>
-      <Gamefeedback guesses={guessesLeft} score={score} hasWon={hasWon} secretCode={secretCode} />
-      <Guesses guesses={guesses} exacts={exacts} partials={partials} />
-      {showOptions && (
-        <div>
-          <button type="button" onClick={resetGame}>
-            Play Again
-          </button>
-          <button type="button" onClick={saveGameToDatabase}>
-            Save Game
-          </button>
-        </div>
-      )}
-      <br />
+      <button type="button" onClick={handleSubmitUsername}>
+        Submit
+      </button>
+      <button type="button" onClick={() => setIsEditingUsername(false)}>
+        Cancel
+      </button>
+    </div>
+  );
+
+  const goToMyGames = () => {
+    setCurrentView(currentView === 'myGames' ? 'game' : 'myGames');
+  };
+
+  const goToTopScores = () => {
+    setCurrentView(currentView === 'topScores' ? 'game' : 'topScores');
+  };
+
+  const goBackToGame = () => {
+    setCurrentView('game');
+  };
+
+  const renderTopScoresButtonText = currentView === 'topScores' ? 'Back to Play' : 'Top Scores';
+  const renderMyGamesButtonText = currentView === 'myGames' ? 'Back to Play' : 'My Games';
+
+
+
+  const renderView = () => {
+    switch (currentView) {
+      case 'game':
+        return (
+          <>
+            <div>You are in game view.</div>
+            <label>
+              <input
+                type="text"
+                maxLength={4}
+                value={currentGuess}
+                onChange={(e) => setCurrentGuess(e.target.value)}
+              />
+              <button onClick={handleGuess} type="button">
+                Submit Guess
+              </button>
+            </label>
+            <Gamefeedback guesses={guessesLeft} score={score} hasWon={hasWon} secretCode={secretCode} />
+            <Guesses guesses={guesses} exacts={exacts} partials={partials} />
+          </>
+        );
+      case 'myGames':
+        return (
+          <MyGames
+            googleId={googleId}
+            goBackToGame={goBackToGame}
+          />
+        );
+      case 'topScores':
+        return (
+          <TopScores
+            topScores={topScores}
+            goBackToGame={goBackToGame}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      <div>
+        <button type="button" onClick={goToTopScores}>
+          {renderTopScoresButtonText}
+        </button>
+        <button type="button" onClick={goToMyGames}>
+          {renderMyGamesButtonText}
+        </button>
+        <button type="button" onClick={handleUsernameChange}>
+          Change Username
+        </button>
+      </div>
+      {renderView()}
     </>
   );
 }
+  
+    
+

@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 
-export default function NicknameForm({ setNickname, saveUserRecord, googleId }) {
+export default function NicknameForm({ setNickname, googleId, setUserRecordExists }) {
   const [newNickname, setNewNickname] = useState('');
 
   const handleNicknameSubmit = () => {
-    // Perform any validation or additional logic if needed
-
-    // Update the nickname state in the parent component (App.js)
-    setNickname(newNickname);
-
-    // Send a POST request to save the user record
+      // Send a POST request to save the user record
     fetch('http://endtoend-405500.uw.r.appspot.com/saveUserRecord', {
       method: 'POST',
       headers: {
@@ -30,6 +25,8 @@ export default function NicknameForm({ setNickname, saveUserRecord, googleId }) 
         console.error('Error saving user record:', error);
         // Handle error if needed
       });
+      setUserRecordExists(true);
+      setNickname(newNickname);
   };
 
   return (
@@ -38,7 +35,6 @@ export default function NicknameForm({ setNickname, saveUserRecord, googleId }) 
         Set your nickname:
         <input
           type="text"
-
           onChange={(e) => setNewNickname(e.target.value)}
         />
       </label>
