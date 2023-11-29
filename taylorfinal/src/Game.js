@@ -225,6 +225,16 @@ export default function Game({ googleId }) {
             </label>
             <Gamefeedback guesses={guessesLeft} score={score} hasWon={hasWon} secretCode={secretCode} />
             <Guesses guesses={guesses} exacts={exacts} partials={partials} />
+            {showOptions && (
+          <div>
+            <button type="button" onClick={resetGame}>
+              Play Again
+            </button>
+            <button type="button" onClick={saveGameToDatabase}>
+              Save Game
+            </button>
+          </div>
+        )}
           </>
         );
       case 'myGames':
