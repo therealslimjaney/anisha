@@ -28,6 +28,7 @@ function LoginForm({ setGoogleId, user, setUser }) {
 				// Handle Errors here.
 				console.error(error);
 			});
+
 	};
 
 	function logoutGoogle() {
@@ -39,15 +40,24 @@ function LoginForm({ setGoogleId, user, setUser }) {
 
 	useEffect(() => {
 		const auth = getAuth();
-		auth.onAuthStateChanged((user) => {
+		const unsubscribe = auth.onAuthStateChanged((user) => {
 		  if (user) {
-			console.log("User is signed in:", user);
 			setUser(user);
 			setGoogleId(user.uid);
+			console.log(user.uid);
 		  } else {
 			console.log("No user is signed in.");
 		  }
 		});
+	  
+		// Call the callback manually to handle the initial state
+		const currentUser = auth.currentUser;
+		if (currentUser) {
+		  setUser(currentUser);
+		  setGoogleId(currentUser.uid);
+		}
+	  
+		return () => unsubscribe(); // Clean up the listener on component unmount
 	  }, []);
 	
 	  return (

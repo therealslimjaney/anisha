@@ -13,6 +13,8 @@ export default function Game({ googleId }) {
   const [partials, setPartials] = useState(null);
   const [hasWon, setHasWon] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [userScores, setUserScores] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   function generateCode() {
     const colours = ['R', 'G', 'B', 'Y', 'O', 'P'];
@@ -96,21 +98,6 @@ export default function Game({ googleId }) {
     setPartials(currentPartials);
   }
 
-  const [userScores, setUserScores] = useState([]);
-  useEffect(() => {
-    fetchUserScores();
-  }, [googleId]);
-
-  async function fetchUserScores() {
-    try {
-      const response = await axios.get(
-        `https://endtoend-405500.uw.r.appspot.com/findByGoogleId?googleId=${googleId}`);
-      setUserScores(response.data);
-    } catch (error) {
-      console.error('Error fetching user scores:', error);
-    }
-  }
-
   const saveGameToDatabase = async () => {
     const gameData = {
       googleId: googleId,
@@ -142,24 +129,33 @@ export default function Game({ googleId }) {
     }
   }
 
+  async function fetchUserScores() {
+    try {
+      const response = await axios.get(
+        `https://endtoend-405500.uw.r.appspot.com/findByGoogleId?googleId=${googleId}&page=${currentPage}&size=10`
+      );
+  
+      // Assuming the response structure includes a 'content' property containing the array of GameRecord
+      const { content } = response.data;
+  
+      setUserScores(content);
+    } catch (error) {
+      console.error('Error fetching user scores:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchUserScores();
+  }, [googleId, currentPage]);
+  
+  // Add a function to handle pagination
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <>
       <div>You are in game view.</div>
-
-      <h2>Top Overall Scores:</h2>
-      <ul>
-        {topScores.map((score, index) => (
-          <li key={index}>{`Google ID: ${score.googleId}, Score: ${score.score}, Date: ${score.date}`}</li>
-        ))}
-      </ul>
-
-      <h2>Your Scores:</h2>
-      <ul>
-        {userScores.map((score, index) => (
-          <li key={index}>{`Google ID: ${score.googleId}, Score: ${score.score}, Date: ${score.date}`}</li>
-        ))}
-      </ul>
-
       <label>
         <input
           type="text"

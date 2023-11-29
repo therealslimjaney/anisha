@@ -1,11 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 
-export default function NicknameForm({ setNickname }) {
+export default function NicknameForm({ setNickname, saveUserRecord, googleId }) {
   const [newNickname, setNewNickname] = useState('');
+
   const handleNicknameSubmit = () => {
-    // Update the nickname state in your app
+    // Perform any validation or additional logic if needed
+
+    // Update the nickname state in the parent component (App.js)
     setNickname(newNickname);
+
+    // Send a POST request to save the user record
+    fetch('http://endtoend-405500.uw.r.appspot.com/saveUserRecord', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userGoogleId: googleId, // Replace with actual user Google ID
+        userHandle: newNickname,
+      }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to save user record');
+        }
+        // Handle success if needed
+      })
+      .catch(error => {
+        console.error('Error saving user record:', error);
+        // Handle error if needed
+      });
   };
 
   return (
@@ -14,7 +38,7 @@ export default function NicknameForm({ setNickname }) {
         Set your nickname:
         <input
           type="text"
-          value={newNickname}
+
           onChange={(e) => setNewNickname(e.target.value)}
         />
       </label>
