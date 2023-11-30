@@ -4,6 +4,7 @@ import Guesses from './Guesses';
 import Gamefeedback from './Gamefeedback';
 import MyGames from './MyGames';
 import TopScores from './TopScores';
+import { format } from 'date-fns';
 
 export default function Game({ googleId }) {
   const secretCode = generateCode();
@@ -96,10 +97,13 @@ export default function Game({ googleId }) {
   }
 
   const saveGameToDatabase = async () => {
+
+    const currentDate = new Date();
+    const formattedDate = format(currentDate, 'dd-MM-yyyy');
     const gameData = {
       googleId: googleId,
       score: score,
-      date: 'a date',
+      Date: formattedDate,
     };
 
     try {
@@ -158,8 +162,14 @@ export default function Game({ googleId }) {
   const handleSubmitUsername = async () => {
     try {
       await axios.post(
-        'https://your-api-endpoint/updateUsername',
-        { googleId, newUsername }
+        'https://endtoend-405500.uw.r.appspot.com/updateUserNickname',
+        null, // pass null as the request body
+        {
+          params: {
+            userGoogleId: googleId,
+            userHandle: newUsername
+          }
+        }
       );
       console.log('Username updated successfully');
     } catch (error) {
@@ -223,34 +233,31 @@ export default function Game({ googleId }) {
                 Submit Guess
               </button>
             </label>
-            <Gamefeedback guesses={guessesLeft} score={score} hasWon={hasWon} secretCode={secretCode} />
+            <Gamefeedback
+              guesses={guessesLeft}
+              score={score}
+              hasWon={hasWon}
+              secretCode={secretCode}
+            />
             <Guesses guesses={guesses} exacts={exacts} partials={partials} />
             {showOptions && (
-          <div>
-            <button type="button" onClick={resetGame}>
-              Play Again
-            </button>
-            <button type="button" onClick={saveGameToDatabase}>
-              Save Game
-            </button>
-          </div>
-        )}
+              <div>
+                <button type="button" onClick={resetGame}>
+                  Play Again
+                </button>
+                <button type="button" onClick={saveGameToDatabase}>
+                  Save Game
+                </button>
+              </div>
+            )}
           </>
         );
       case 'myGames':
-        return (
-          <MyGames
-            googleId={googleId}
-            goBackToGame={goBackToGame}
-          />
-        );
+        return <MyGames googleId={googleId} goBackToGame={goBackToGame} />;
       case 'topScores':
-        return (
-          <TopScores
-            topScores={topScores}
-            goBackToGame={goBackToGame}
-          />
-        );
+        return <TopScores topScores={topScores} goBackToGame={goBackToGame} />;
+      case 'changeUsername':
+        return renderUsernameForm(); // Render the username form directly
       default:
         return null;
     }
@@ -265,7 +272,7 @@ export default function Game({ googleId }) {
         <button type="button" onClick={goToMyGames}>
           {renderMyGamesButtonText}
         </button>
-        <button type="button" onClick={handleUsernameChange}>
+        <button type="button" onClick={() => setCurrentView('changeUsername')}>
           Change Username
         </button>
       </div>
@@ -273,6 +280,6 @@ export default function Game({ googleId }) {
     </>
   );
 }
-  
-    
+
+
 
