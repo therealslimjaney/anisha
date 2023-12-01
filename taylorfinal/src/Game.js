@@ -21,6 +21,40 @@ export default function Game({ googleId }) {
   const [newUsername, setNewUsername] = useState('');
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [currentView, setCurrentView] = useState('game');
+  const [isGameSaved, setIsGameSaved] = useState(false); // New state to track game save status
+
+  const renderViewButtons = () => (
+    <div>
+    <button
+      type="button"
+      onClick={goBackToGame}
+      className={currentView === 'game' ? 'active' : ''}
+    >
+      Play Mastermind
+    </button>
+    <button
+      type="button"
+      onClick={goToTopScores}
+      className={currentView === 'topScores' ? 'active' : ''}
+    >
+      Top Scores
+    </button>
+    <button
+      type="button"
+      onClick={goToMyGames}
+      className={currentView === 'myGames' ? 'active' : ''}
+    >
+      My Scores
+    </button>
+    <button
+      type="button"
+      onClick={() => setCurrentView('changeUsername')}
+      className={currentView === 'changeUsername' ? 'active' : ''}
+    >
+      Change User Handle
+    </button>
+  </div>
+  );
 
   function generateCode() {
     const colours = ['R', 'G', 'B', 'Y', 'O', 'P'];
@@ -47,26 +81,31 @@ export default function Game({ googleId }) {
     setHasWon(false);
     setShowOptions(false);
     setCurrentGuess('');
+    setIsGameSaved(false); // Reset save status when resetting the game
   }
 
   function handleGuess(e) {
     e.preventDefault();
-
+  
     if (guessesLeft > 0) {
-      setGuessesLeft((prevGuessesLeft) => prevGuessesLeft - 1);
       countMatches();
       setGuesses([...guesses, { guess: currentGuess, exacts, partials }]);
-
+  
       if (exacts === 4) {
         setHasWon(true);
         setShowOptions(true);
-      } else if (guessesLeft === 0) {
+      } else if (guessesLeft === 1) {
         setShowOptions(true);
-      } else {
+      }
+  
+      // Deduct points only if the guess is incorrect
+      if (exacts !== 4) {
         setScore(score - 10);
       }
+  
+      setGuessesLeft((prevGuessesLeft) => prevGuessesLeft - 1);
     }
-
+  
     setCurrentGuess('');
   }
 
@@ -111,6 +150,7 @@ export default function Game({ googleId }) {
         'https://endtoend-405500.uw.r.appspot.com/saveGameRecord',
         gameData
       );
+      setIsGameSaved(true); // Update save status after successful save
     } catch (error) {
       console.error('Error saving game:', error);
     }
@@ -193,9 +233,6 @@ export default function Game({ googleId }) {
       <button type="button" onClick={handleSubmitUsername}>
         Submit
       </button>
-      <button type="button" onClick={() => setIsEditingUsername(false)}>
-        Cancel
-      </button>
     </div>
   );
 
@@ -211,8 +248,8 @@ export default function Game({ googleId }) {
     setCurrentView('game');
   };
 
-  const renderTopScoresButtonText = currentView === 'topScores' ? 'Back to Play' : 'Top Scores';
-  const renderMyGamesButtonText = currentView === 'myGames' ? 'Back to Play' : 'My Games';
+  const renderTopScoresButtonText = 'Top Scores';
+  const renderMyGamesButtonText = 'My Scores';
 
 
 
@@ -221,6 +258,7 @@ export default function Game({ googleId }) {
       case 'game':
         return (
           <>
+          {renderViewButtons()}
             <div>You are in game view.</div>
             <label>
               <input
@@ -228,8 +266,13 @@ export default function Game({ googleId }) {
                 maxLength={4}
                 value={currentGuess}
                 onChange={(e) => setCurrentGuess(e.target.value)}
+                disabled={hasWon || guessesLeft === 0} // Disable input when game is won or lost
               />
-              <button onClick={handleGuess} type="button">
+              <button
+                onClick={handleGuess}
+                type="button"
+                disabled={hasWon || guessesLeft === 0} // Disable button when game is won or lost
+              >
                 Submit Guess
               </button>
             </label>
@@ -245,19 +288,38 @@ export default function Game({ googleId }) {
                 <button type="button" onClick={resetGame}>
                   Play Again
                 </button>
-                <button type="button" onClick={saveGameToDatabase}>
-                  Save Game
+                <button
+                  type="button"
+                  onClick={saveGameToDatabase}
+                  disabled={isGameSaved} // Disable the button if the game is already saved
+                >
+                  {isGameSaved ? 'Game Saved ✓' : 'Save Game'}
                 </button>
               </div>
             )}
           </>
         );
-      case 'myGames':
-        return <MyGames googleId={googleId} goBackToGame={goBackToGame} />;
-      case 'topScores':
-        return <TopScores topScores={topScores} goBackToGame={goBackToGame} />;
-      case 'changeUsername':
-        return renderUsernameForm(); // Render the username form directly
+        case 'myGames':
+          return (
+            <>
+              {renderViewButtons()}
+              <MyGames googleId={googleId} goBackToGame={goBackToGame} />
+            </>
+          );
+        case 'topScores':
+          return (
+            <>
+              {renderViewButtons()}
+              <TopScores topScores={topScores} goBackToGame={goBackToGame} />
+            </>
+          );
+        case 'changeUsername':
+          return (
+            <>
+              {renderViewButtons()}
+              {renderUsernameForm()}
+            </>
+          );
       default:
         return null;
     }
@@ -265,21 +327,11 @@ export default function Game({ googleId }) {
 
   return (
     <>
-      <div>
-        <button type="button" onClick={goToTopScores}>
-          {renderTopScoresButtonText}
-        </button>
-        <button type="button" onClick={goToMyGames}>
-          {renderMyGamesButtonText}
-        </button>
-        <button type="button" onClick={() => setCurrentView('changeUsername')}>
-          Change Username
-        </button>
-      </div>
       {renderView()}
     </>
   );
 }
+
 
 
 
