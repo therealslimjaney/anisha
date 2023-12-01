@@ -1,6 +1,239 @@
-.App {
-  text-align: center;
+@font-face {
+  font-family: 'Love';
+  src: url('./fonts/Love.ttf') format('truetype');
+
 }
+
+@font-face {
+  font-family: 'PrintBold';
+  src: url('./fonts/PrintBold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'PrintCLearly';
+  src: url('./fonts/PrintClearly.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'girl';
+  src: url('./fonts/girl.otf') format('opentype');
+}
+
+body {
+  background: linear-gradient(to bottom, #f5f5fd, #e8e8fa);
+  margin: 0;
+  font-family: 'girl';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 48px;
+
+  background-image: url(https://pbs.twimg.com/media/FACOJGCUYAcX4yX?format=jpg&name=4096x4096);
+  /* Adjust the path */
+  background-size: cover;
+  /* Adjust according to your needs */
+  background-position: center;
+  /* Adjust according to your needs */
+  background-repeat: no-repeat;
+  /* Adjust according to your needs */
+  margin: 0;
+  /* Remove default body margin */
+  padding: 0;
+  /* Remove default body padding */
+}
+
+.user-info {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #3e3967;
+  font-family: 'Love';
+  font-size: 30px;
+}
+
+.App {
+  max-width: 600px;
+  /* Adjust the max-width according to your design */
+  margin: 0 auto;
+  /* Center the container */
+  display: flex;
+  flex-direction: column;
+  /* Stack children vertically */
+  align-items: center;
+  /* Center children horizontally */
+  justify-content: center;
+  /* Center children vertically */
+  background-color: #3e3967;
+  color: white;
+  padding: 10px;
+  /* Reduce padding */
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Add styles for your colours */
+.colour-container {
+  display: flex;
+  /* Align colours horizontally */
+}
+
+.colour {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  /* Adjust size and spacing */
+  border-radius: 50%;
+}
+
+/* You can customize the colours as needed */
+.colour.red {
+  background-color: #ff8080;
+}
+
+.colour.orange {
+  background-color: #ffb366;
+}
+
+.colour.blue {
+  background-color: #66b3ff;
+}
+
+.colour.purple {
+  background-color: #cc99ff;
+}
+
+.colour.yellow {
+  background-color: #ffff99;
+}
+
+.colour.green {
+  background-color: #99ff99;
+}
+
+h1 {
+  font-family: 'Love', sans-serif;
+  color: #3e3967;
+  align-items: center;
+  font-size: 100px;
+  padding-top: 30px;
+  padding-bottom: 1px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+div {
+  margin: 1px;
+}
+
+button {
+  font-family: 'girl', sans-serif;
+  background-color: #3e3967;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 15px 30px;
+  font-size: 24px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+
+
+button:hover {
+  background: #6a5acd;
+  /* Use your image path */
+  background-size: cover;
+  /* Adjust according to your needs */
+}
+
+.button-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 1;
+}
+
+.button-container button {
+  font-family: 'girl', sans-serif;
+  background-color: #3e3967;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 15px 30px;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.button-container button:hover {
+  background: #6a5acd;
+}
+
+/* Add the 'active' style for the active button if needed */
+.button-container button.active {
+  background: #6a5acd;
+}
+
+input[type="text"] {
+  width: 200px;
+  /* Adjust the width to your preference */
+  height: 44px;
+  /* Adjust the height to match the buttons */
+  font-family: 'Love', sans-serif;
+  /* Set the font */
+  color: #3e3967;
+  font-size: 24px;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  vertical-align: middle;
+  /* Align the input vertically with the adjacent button */
+}
+
+.audio-button-container {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999; /* Adjust the z-index as needed */
+}
+
+p {
+  font-size: 32px;
+  color: #3e3967;
+  /* Dark lavender/blueberry color */
+  font-weight: bold;
+  text-align: center;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+h4 {
+  text-align: center;
+
+  color: #3e3967;
+  /* Set the text color to white or your preferred color */
+  font-family: 'Love';
+  font-size: 65px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  /* Adjust the font size as needed */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  /* Adjust the margin as needed */
+}
+
 
 .App-logo {
   height: 40vmin;
@@ -28,10 +261,83 @@
   color: #61dafb;
 }
 
+
+.instructions {
+  margin-bottom: 25px;
+  padding-top: 1px;
+  /* Adjust the padding for the instructions div */
+}
+
+/* Add styles for your paragraphs inside the instructions div */
+.instructions p {
+  font-size: 36px;
+  /* Adjust the font size for the paragraphs */
+  margin: 2px 0;
+  /* Adjust the margin for the paragraphs */
+}
+
+.color-code {
+  display: inline-block;
+  padding: 6px 10px;
+  /* Adjust padding for a smaller size */
+  margin-right: 8px;
+  /* Adjust margin as needed */
+  border-radius: 15px;
+  /* Use a slightly smaller border-radius */
+  font-size: 24px;
+  /* Adjust the font size for smaller text */
+  font-weight: bold;
+  /* Make the text bold */
+}
+
+.red {
+  background-color: #ff8080;
+  /* Light red */
+  color: #5c0000;
+  /* Dark red text */
+}
+
+.orange {
+  background-color: #ffb366;
+  /* Light orange */
+  color: #804d00;
+  /* Dark orange text */
+}
+
+.blue {
+  background-color: #99ccff;
+  /* Light blue */
+  color: #004080;
+  /* Dark blue text */
+}
+
+.purple {
+  background-color: #cc99ff;
+  /* Light purple */
+  color: #4d0066;
+  /* Dark purple text */
+}
+
+.yellow {
+  background-color: #ffff99;
+  /* Light yellow */
+  color: #808000;
+  /* Dark yellow text */
+}
+
+.green {
+  background-color: #99ff99;
+  /* Light green */
+  color: #004d00;
+  /* Dark green text */
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

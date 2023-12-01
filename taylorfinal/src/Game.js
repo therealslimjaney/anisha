@@ -5,8 +5,9 @@ import Gamefeedback from './Gamefeedback';
 import MyGames from './MyGames';
 import TopScores from './TopScores';
 import { format } from 'date-fns';
+import './App.css';
 
-export default function Game({ googleId }) {
+export default function Game({ googleId, nickname }) {
   const secretCode = generateCode();
   const [currentGuess, setCurrentGuess] = useState('');
   const [guesses, setGuesses] = useState([]);
@@ -21,40 +22,51 @@ export default function Game({ googleId }) {
   const [newUsername, setNewUsername] = useState('');
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [currentView, setCurrentView] = useState('game');
-  const [isGameSaved, setIsGameSaved] = useState(false); // New state to track game save status
+  const [isGameSaved, setIsGameSaved] = useState(false);
 
   const renderViewButtons = () => (
-    <div>
-    <button
-      type="button"
-      onClick={goBackToGame}
-      className={currentView === 'game' ? 'active' : ''}
-    >
-      Play Mastermind
-    </button>
-    <button
-      type="button"
-      onClick={goToTopScores}
-      className={currentView === 'topScores' ? 'active' : ''}
-    >
-      Top Scores
-    </button>
-    <button
-      type="button"
-      onClick={goToMyGames}
-      className={currentView === 'myGames' ? 'active' : ''}
-    >
-      My Scores
-    </button>
-    <button
-      type="button"
-      onClick={() => setCurrentView('changeUsername')}
-      className={currentView === 'changeUsername' ? 'active' : ''}
-    >
-      Change User Handle
-    </button>
-  </div>
+    <div className="button-container">
+      <div className="user-info">
+        <span className="current-user" nickname={nickname}>Player handle: {nickname}!</span>
+      </div>
+      <button
+        type="button"
+        onClick={goBackToGame}
+        className={currentView === 'game' ? 'active' : ''}
+      >
+        Play Mastermind
+      </button>
+      <button
+        type="button"
+        onClick={goToTopScores}
+        className={currentView === 'topScores' ? 'active' : ''}
+      >
+        Top Scores
+      </button>
+      <button
+        type="button"
+        onClick={goToMyGames}
+        className={currentView === 'myGames' ? 'active' : ''}
+      >
+        My Scores
+      </button>
+      <button
+        type="button"
+        onClick={() => setCurrentView('changeUsername')}
+        className={currentView === 'changeUsername' ? 'active' : ''}
+      >
+        Change User Handle
+      </button>
+      {/* Placeholder for the logout button */}
+      <button type="button" onClick={handleLogout}>
+        Logout
+      </button>
+    </div>
   );
+
+  function handleLogout() {
+    // Add your logout logic here
+  }
 
   function generateCode() {
     const colours = ['R', 'G', 'B', 'Y', 'O', 'P'];
@@ -86,26 +98,26 @@ export default function Game({ googleId }) {
 
   function handleGuess(e) {
     e.preventDefault();
-  
+
     if (guessesLeft > 0) {
       countMatches();
       setGuesses([...guesses, { guess: currentGuess, exacts, partials }]);
-  
+
       if (exacts === 4) {
         setHasWon(true);
         setShowOptions(true);
       } else if (guessesLeft === 1) {
         setShowOptions(true);
       }
-  
+
       // Deduct points only if the guess is incorrect
       if (exacts !== 4) {
         setScore(score - 10);
       }
-  
+
       setGuessesLeft((prevGuessesLeft) => prevGuessesLeft - 1);
     }
-  
+
     setCurrentGuess('');
   }
 
@@ -223,7 +235,7 @@ export default function Game({ googleId }) {
   const renderUsernameForm = () => (
     <div>
       <label>
-        New Username:
+        Player handle:
         <input
           type="text"
           value={newUsername}
@@ -231,7 +243,7 @@ export default function Game({ googleId }) {
         />
       </label>
       <button type="button" onClick={handleSubmitUsername}>
-        Submit
+        Save
       </button>
     </div>
   );
@@ -248,78 +260,86 @@ export default function Game({ googleId }) {
     setCurrentView('game');
   };
 
-  const renderTopScoresButtonText = 'Top Scores';
-  const renderMyGamesButtonText = 'My Scores';
-
-
-
   const renderView = () => {
     switch (currentView) {
       case 'game':
         return (
           <>
-          {renderViewButtons()}
-            <div>You are in game view.</div>
-            <label>
-              <input
-                type="text"
-                maxLength={4}
-                value={currentGuess}
-                onChange={(e) => setCurrentGuess(e.target.value)}
-                disabled={hasWon || guessesLeft === 0} // Disable input when game is won or lost
-              />
-              <button
-                onClick={handleGuess}
-                type="button"
-                disabled={hasWon || guessesLeft === 0} // Disable button when game is won or lost
-              >
-                Submit Guess
-              </button>
-            </label>
-            <Gamefeedback
-              guesses={guessesLeft}
-              score={score}
-              hasWon={hasWon}
-              secretCode={secretCode}
-            />
-            <Guesses guesses={guesses} exacts={exacts} partials={partials} />
-            {showOptions && (
-              <div>
-                <button type="button" onClick={resetGame}>
-                  Play Again
-                </button>
+            <div>
+              <h1> Mastermind - Taylor's Version</h1>
+            </div>
+            <div className="instructions">
+              <p>Can you guess the mystery colour sequence?</p>
+              <p>Enter 4 letters, each representing a colour:</p>
+              <p>
+                <span className="color-code red">Red - 'R'</span>
+                <span className="color-code orange">Orange - 'O'</span>
+                <span className="color-code blue">Blue - 'B'</span>
+                <span className="color-code purple">Purple - 'P'</span>
+                <span className="color-code yellow">Yellow - 'Y'</span>
+                <span className="color-code green">Green - 'G'</span>
+              </p>
+            </div>
+            <div className='App'>
+              <label>
+                <input
+                  type="text"
+                  maxLength={4}
+                  value={currentGuess}
+                  onChange={(e) => setCurrentGuess(e.target.value)}
+                  disabled={hasWon || guessesLeft === 0} // Disable input when game is won or lost
+                />
                 <button
+                  onClick={handleGuess}
+                  className="input-field"
                   type="button"
-                  onClick={saveGameToDatabase}
-                  disabled={isGameSaved} // Disable the button if the game is already saved
+                  disabled={hasWon || guessesLeft === 0} // Disable button when game is won or lost
                 >
-                  {isGameSaved ? 'Game Saved ✓' : 'Save Game'}
+                  Submit Guess
                 </button>
-              </div>
-            )}
+              </label>
+              <Gamefeedback
+                guesses={guessesLeft}
+                score={score}
+                hasWon={hasWon}
+                secretCode={secretCode}
+              />
+              <Guesses guesses={guesses} exacts={exacts} partials={partials} />
+              {showOptions && (
+                <div>
+                  <button type="button" onClick={resetGame}>
+                    Play Again
+                  </button>
+                  <button
+                    type="button"
+                    onClick={saveGameToDatabase}
+                    disabled={isGameSaved} // Disable the button if the game is already saved
+                  >
+                    {isGameSaved ? 'Game Saved ✓' : 'Save Game'}
+                  </button>
+                </div>
+              )}
+            </div>
           </>
         );
-        case 'myGames':
-          return (
-            <>
-              {renderViewButtons()}
-              <MyGames googleId={googleId} goBackToGame={goBackToGame} />
-            </>
-          );
-        case 'topScores':
-          return (
-            <>
-              {renderViewButtons()}
-              <TopScores topScores={topScores} goBackToGame={goBackToGame} />
-            </>
-          );
-        case 'changeUsername':
-          return (
-            <>
-              {renderViewButtons()}
-              {renderUsernameForm()}
-            </>
-          );
+      case 'myGames':
+        return (
+          <>
+            <MyGames googleId={googleId} goBackToGame={goBackToGame} />
+          </>
+        );
+      case 'topScores':
+        return (
+          <>
+            <TopScores topScores={topScores} goBackToGame={goBackToGame} />
+          </>
+        );
+      case 'changeUsername':
+        return (
+          <>
+            {renderUsernameForm()}
+          </>
+        );
       default:
         return null;
     }
@@ -327,6 +347,7 @@ export default function Game({ googleId }) {
 
   return (
     <>
+      {renderViewButtons()}
       {renderView()}
     </>
   );

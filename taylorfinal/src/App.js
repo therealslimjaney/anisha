@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LoginForm from './LoginForm';
 import NicknameForm from './NicknameForm';
 import Game from './Game';
+import './App.css';
 
 export default function App() {
   const [googleId, setGoogleId] = useState('');
@@ -50,7 +51,7 @@ export default function App() {
       )}
 
       {googleId && userRecordExists && nickname && (
-        <Game googleId={googleId} />
+        <Game googleId={googleId} setGoogleId={setGoogleId} nickname={nickname}/>
       )}
 
       {!googleId && (

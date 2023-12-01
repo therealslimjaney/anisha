@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import './App.css';
 
 export default function NicknameForm({ setNickname, googleId, setUserRecordExists }) {
   const [newNickname, setNewNickname] = useState('');
 
   const handleNicknameSubmit = () => {
-      // Send a POST request to save the user record
+    // Send a POST request to save the user record
+    setNickname(newNickname);
     fetch('http://endtoend-405500.uw.r.appspot.com/saveUserRecord', {
       method: 'POST',
       headers: {
@@ -25,20 +27,25 @@ export default function NicknameForm({ setNickname, googleId, setUserRecordExist
         console.error('Error saving user record:', error);
         // Handle error if needed
       });
-      setUserRecordExists(true);
-      setNickname(newNickname);
+    setUserRecordExists(true);
   };
 
   return (
     <div>
       <label>
-        Set your nickname:
         <input
           type="text"
+          className="input-field"
           onChange={(e) => setNewNickname(e.target.value)}
         />
       </label>
-      <button onClick={handleNicknameSubmit}>Submit Nickname</button>
+      <button style={{
+        backgroundColor: '#3e3967', // Set the background color
+        color: 'white',              // Set the text color
+        fontSize: '24px',
+        fontFamily: 'Love'
+        // Add more styles as needed
+      }} onClick={handleNicknameSubmit}>Set player handle:</button>
     </div>
   );
 }

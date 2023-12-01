@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './App.css';
+import './TopScores.css'
 
 const TopScores = ({ goBackToGame }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,19 +30,28 @@ const TopScores = ({ goBackToGame }) => {
     };
 
     return (
-        <>
-            <div>
-                <h2>Top Scores</h2>
-                {/* Render your top scores list here */}
-                {topScores.map((gameRecord) => (
-                    <div key={gameRecord.id}>
-                        <span>Google ID: {gameRecord.googleId} - </span>
-                        <span>Score: {gameRecord.score} - </span>
-                        <span>Date: {gameRecord.date}</span>
-                    </div>
-                ))}
-            </div>
-            <div>
+        <div>
+            <h4>Top Scores</h4>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>Google ID</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {/* Render your top scores list here */}
+                    {topScores.map((gameRecord, index) => (
+                        <tr key={gameRecord.id} className={`table-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
+                            <td>{gameRecord.googleId}</td>
+                            <td>{gameRecord.score}</td>
+                            <td>{gameRecord.date}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <div className="button-container-scores">
                 <button
                     type="button"
                     onClick={() => handlePageChange(currentPage - 1)}
@@ -57,7 +68,7 @@ const TopScores = ({ goBackToGame }) => {
                     Next Page
                 </button>
             </div>
-        </>
+        </div>
     );
 };
 

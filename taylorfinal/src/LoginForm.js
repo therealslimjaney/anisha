@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithRedirect, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 import React, { useState, useEffect } from 'react';
+import './App.css';
 
 // LoginSuccessful is a function sent in by parent component
 function LoginForm({ setGoogleId}) {
