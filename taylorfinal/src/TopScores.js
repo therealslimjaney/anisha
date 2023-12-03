@@ -1,14 +1,21 @@
+/**
+ * TopScores component displays top scores fetched from the server with pagination.
+ * @param {function} goBackToGame - Callback function to navigate back to the game.
+ * @returns {JSX.Element} - Rendered top scores with pagination controls.
+ */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
-import './TopScores.css'
+import './TopScores.css';
 
 const TopScores = ({ goBackToGame }) => {
+    // State variables for pagination and top scores
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10); // Set your desired page size
+    const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const [topScores, setTopScores] = useState([]);
 
+    // Function to fetch top scores from the server
     const fetchTopScores = async (page) => {
         try {
             const response = await axios.get(`https://endtoend-405500.uw.r.appspot.com/topOverallScores?page=${page - 1}&size=${pageSize}`);
@@ -21,14 +28,17 @@ const TopScores = ({ goBackToGame }) => {
         }
     };
 
+    // Fetch top scores on component mount or when current page changes
     useEffect(() => {
         fetchTopScores(currentPage);
     }, [currentPage]);
 
+    // Handle page change for pagination
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
 
+    // Render the top scores table and pagination controls
     return (
         <div>
             <h4>Top Scores</h4>
@@ -69,6 +79,11 @@ const TopScores = ({ goBackToGame }) => {
                 </button>
             </div>
         </div>
+    );
+};
+
+export default TopScores;
+
     );
 };
 
