@@ -98,6 +98,3 @@ const MyScores = ({ googleId }) => {
 
 export default MyScores;
 
-
-export default MyScores;
-
