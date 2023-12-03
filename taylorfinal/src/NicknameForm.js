@@ -1,9 +1,18 @@
+/**
+ * NicknameForm component allows users to set their nickname and saves it to the server.
+ * @param {function} setNickname - Callback function to set the user's nickname.
+ * @param {string} googleId - Google ID of the user.
+ * @param {function} setUserRecordExists - Callback function to set if user record exists.
+ * @returns {JSX.Element} - Rendered form to set the user's nickname.
+ */
 import React, { useState } from 'react';
 import './App.css';
 
 export default function NicknameForm({ setNickname, googleId, setUserRecordExists }) {
+  // State for the new nickname
   const [newNickname, setNewNickname] = useState('');
 
+  // Function to handle nickname submission
   const handleNicknameSubmit = () => {
     // Send a POST request to save the user record
     setNickname(newNickname);
@@ -30,6 +39,7 @@ export default function NicknameForm({ setNickname, googleId, setUserRecordExist
     setUserRecordExists(true);
   };
 
+  // Render the input field and submit button for setting the nickname
   return (
     <div>
       <label>
@@ -40,8 +50,8 @@ export default function NicknameForm({ setNickname, googleId, setUserRecordExist
         />
       </label>
       <button style={{
-        backgroundColor: '#3e3967', // Set the background color
-        color: 'white',              // Set the text color
+        backgroundColor: '#3e3967', 
+        color: 'white',              
         fontSize: '24px',
         fontFamily: 'Love'
         // Add more styles as needed
@@ -49,4 +59,5 @@ export default function NicknameForm({ setNickname, googleId, setUserRecordExist
     </div>
   );
 }
+
 
