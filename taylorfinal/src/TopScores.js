@@ -83,8 +83,3 @@ const TopScores = ({ goBackToGame }) => {
 };
 
 export default TopScores;
-
-    );
-};
-
-export default TopScores;
