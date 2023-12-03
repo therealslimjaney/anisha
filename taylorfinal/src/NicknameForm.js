@@ -7,13 +7,13 @@ export default function NicknameForm({ setNickname, googleId, setUserRecordExist
   const handleNicknameSubmit = () => {
     // Send a POST request to save the user record
     setNickname(newNickname);
-    fetch('http://endtoend-405500.uw.r.appspot.com/saveUserRecord', {
+    fetch('https://endtoend-405500.uw.r.appspot.com/saveUserRecord', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userGoogleId: googleId, // Replace with actual user Google ID
+        userGoogleId: googleId,
         userHandle: newNickname,
       }),
     })

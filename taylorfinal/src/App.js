@@ -13,7 +13,7 @@ export default function App() {
   useEffect(() => {
     const checkForUserRecord = async () => {
       try {
-        const response = await fetch(`http://endtoend-405500.uw.r.appspot.com/findByUserGoogleId?userGoogleId=${googleId}`);
+        const response = await fetch(`https://endtoend-405500.uw.r.appspot.com/findByUserGoogleId?userGoogleId=${googleId}`);
         const data = await response.json();
         const exists = data && data.id;
         setUserRecordExists(exists);
@@ -25,7 +25,7 @@ export default function App() {
 
     const getUserNickname = async (userGoogleId) => {
       try {
-        const response = await fetch(`http://endtoend-405500.uw.r.appspot.com/getUserNickname?userGoogleId=${userGoogleId}`);
+        const response = await fetch(`https://endtoend-405500.uw.r.appspot.com/getUserNickname?userGoogleId=${userGoogleId}`);
         const nickname = await response.text();
         setNickname(nickname);
       } catch (error) {
@@ -51,7 +51,7 @@ export default function App() {
       )}
 
       {googleId && userRecordExists && nickname && (
-        <Game googleId={googleId} setGoogleId={setGoogleId} nickname={nickname}/>
+        <Game googleId={googleId} setGoogleId={setGoogleId} nickname={nickname} setNickname={setNickname} />
       )}
 
       {!googleId && (

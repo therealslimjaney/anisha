@@ -8,7 +8,7 @@ import TopScores from './TopScores';
 import { format } from 'date-fns';
 import './App.css';
 
-export default function Game({ googleId, nickname, setGoogleId }) {
+export default function Game({ googleId, nickname, setGoogleId, setNickname }) {
   const secretCode = generateCode();
   const [currentGuess, setCurrentGuess] = useState('');
   const [guesses, setGuesses] = useState([]);
@@ -24,6 +24,7 @@ export default function Game({ googleId, nickname, setGoogleId }) {
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [currentView, setCurrentView] = useState('game');
   const [isGameSaved, setIsGameSaved] = useState(false);
+  const [isFirstGuess, setIsFirstGuess] = useState(true);
 
   const renderViewButtons = () => (
     <div className="button-container">
@@ -106,26 +107,32 @@ export default function Game({ googleId, nickname, setGoogleId }) {
 
   function handleGuess(e) {
     e.preventDefault();
-
+    if (exacts === 4 && isFirstGuess) {
+      setScore(100);
+      setHasWon(true);
+      setShowOptions(true);
+      return;
+    }
+  
     if (guessesLeft > 0) {
       countMatches();
       setGuesses([...guesses, { guess: currentGuess, exacts, partials }]);
-
+  
       if (exacts === 4) {
         setHasWon(true);
         setShowOptions(true);
       } else if (guessesLeft === 1) {
         setShowOptions(true);
       }
-
-      // Deduct points only if the guess is incorrect
-      if (exacts !== 4) {
-        setScore(score - 10);
-      }
-
+  
+      // Deduct 10 points for each guess
+      const newScore = Math.max(0, score - 10);
+      setScore(newScore);
+  
       setGuessesLeft((prevGuessesLeft) => prevGuessesLeft - 1);
+      setIsFirstGuess(false); // Set isFirstGuess to false after the first guess
     }
-
+  
     setCurrentGuess('');
   }
 
@@ -156,7 +163,6 @@ export default function Game({ googleId, nickname, setGoogleId }) {
   }
 
   const saveGameToDatabase = async () => {
-
     const currentDate = new Date();
     const formattedDate = format(currentDate, 'dd-MM-yyyy');
     const gameData = {
@@ -165,11 +171,16 @@ export default function Game({ googleId, nickname, setGoogleId }) {
       date: formattedDate,
     };
 
+    console.log('Save game data:', gameData);
+
     try {
-      await axios.post(
+      const response = await axios.post(
         'https://endtoend-405500.uw.r.appspot.com/saveGameRecord',
         gameData
       );
+
+      console.log('Save game response:', response.data);
+
       setIsGameSaved(true); // Update save status after successful save
     } catch (error) {
       console.error('Error saving game:', error);
@@ -220,6 +231,7 @@ export default function Game({ googleId, nickname, setGoogleId }) {
   };
 
   const handleSubmitUsername = async () => {
+    setNickname(newUsername);
     try {
       await axios.post(
         'https://endtoend-405500.uw.r.appspot.com/updateUserNickname',
@@ -227,7 +239,7 @@ export default function Game({ googleId, nickname, setGoogleId }) {
         {
           params: {
             userGoogleId: googleId,
-            userHandle: newUsername
+            userHandle: newUsername,
           }
         }
       );
