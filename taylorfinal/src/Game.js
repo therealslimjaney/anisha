@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Guesses from './Guesses';
+import { getAuth, signInWithRedirect, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 import Gamefeedback from './Gamefeedback';
 import MyGames from './MyGames';
 import TopScores from './TopScores';
 import { format } from 'date-fns';
 import './App.css';
 
-export default function Game({ googleId, nickname }) {
+export default function Game({ googleId, nickname, setGoogleId }) {
   const secretCode = generateCode();
   const [currentGuess, setCurrentGuess] = useState('');
   const [guesses, setGuesses] = useState([]);
@@ -58,14 +59,21 @@ export default function Game({ googleId, nickname }) {
         Change User Handle
       </button>
       {/* Placeholder for the logout button */}
-      <button type="button" onClick={handleLogout}>
+      <button type="button" onClick={logoutGoogle}>
         Logout
       </button>
     </div>
   );
 
-  function handleLogout() {
-    // Add your logout logic here
+  async function logoutGoogle() {
+    try {
+      const auth = getAuth();
+      await auth.signOut();
+      setGoogleId(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Handle the error if needed
+    }
   }
 
   function generateCode() {
@@ -154,7 +162,7 @@ export default function Game({ googleId, nickname }) {
     const gameData = {
       googleId: googleId,
       score: score,
-      Date: formattedDate,
+      date: formattedDate,
     };
 
     try {
@@ -260,6 +268,20 @@ export default function Game({ googleId, nickname }) {
     setCurrentView('game');
   };
 
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handleTogglePlay = () => {
+    const audio = document.getElementById('audio-element');
+
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+
+    setIsPlaying(!isPlaying);
+  };
+
   const renderView = () => {
     switch (currentView) {
       case 'game':
@@ -349,6 +371,12 @@ export default function Game({ googleId, nickname }) {
     <>
       {renderViewButtons()}
       {renderView()}
+      <div>
+        <audio id="audio-element" src="/Taylor Swift - Mastermind.mp3" />
+        <button onClick={handleTogglePlay}>
+          {isPlaying ? 'Pause ▮▮' : 'Listen to Taylor▶️'}
+        </button>
+      </div>
     </>
   );
 }

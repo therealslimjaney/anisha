@@ -32,13 +32,6 @@ function LoginForm({ setGoogleId}) {
 
 	};
 
-	function logoutGoogle() {
-		const auth = getAuth();
-		auth.signOut();
-		setUser(null);
-		setGoogleId(null);
-	}
-
 useEffect(() => {
   const auth = getAuth();
   const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -63,13 +56,8 @@ useEffect(() => {
 	
 	  return (
 		<div>
-		  {!user ? (
+		  {!user && (
 			<button onClick={signInWithGoogle}>Sign in with Google</button>
-		  ) : (
-			<>
-			  <p>User: {user.uid}</p>
-			  <button onClick={logoutGoogle}>Log out</button>
-			</>
 		  )}
 		</div>
 	  );
