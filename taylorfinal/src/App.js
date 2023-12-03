@@ -4,13 +4,21 @@ import NicknameForm from './NicknameForm';
 import Game from './Game';
 import './App.css';
 
+/**
+ * App component manages user authentication and renders appropriate components based on the user's state.
+ */
 export default function App() {
   const [googleId, setGoogleId] = useState('');
   const [nickname, setNickname] = useState('');
   const [userRecordExists, setUserRecordExists] = useState(false);
 
-
+  /**
+   * useEffect hook to check for user record and fetch user nickname when the Google ID changes.
+   */
   useEffect(() => {
+    /**
+     * Checks if a user record exists for the given Google ID.
+     */
     const checkForUserRecord = async () => {
       try {
         const response = await fetch(`https://endtoend-405500.uw.r.appspot.com/findByUserGoogleId?userGoogleId=${googleId}`);
@@ -23,6 +31,9 @@ export default function App() {
       }
     };
 
+    /**
+     * Fetches the user nickname for the given Google ID.
+     */
     const getUserNickname = async (userGoogleId) => {
       try {
         const response = await fetch(`https://endtoend-405500.uw.r.appspot.com/getUserNickname?userGoogleId=${userGoogleId}`);
@@ -40,6 +51,9 @@ export default function App() {
     }
   }, [googleId]);
 
+  /**
+   * Renders components based on the user's state.
+   */
   return (
     <div>
       {googleId && !userRecordExists && (
@@ -60,4 +74,5 @@ export default function App() {
     </div>
   );
 }
+
 
