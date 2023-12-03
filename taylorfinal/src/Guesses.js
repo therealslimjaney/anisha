@@ -1,6 +1,10 @@
-import React from 'react';
-import './Guesses.css';
-// Guesses Component
+/**
+ * Guesses component renders a list of guesses with their exact and partial matches.
+ * @param {Array} guesses - Array of guess objects containing guess data.
+ * @param {number} exacts - Number of exact matches for each guess.
+ * @param {number} partials - Number of partial matches for each guess.
+ * @returns {JSX.Element} - Rendered list of guesses with match information.
+ */
 export default function Guesses({ guesses, exacts, partials }) {
   return (
     <ul className="Guesses">
