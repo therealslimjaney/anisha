@@ -13,9 +13,9 @@ export default function Game({ googleId, nickname, setGoogleId, setNickname }) {
   const [currentGuess, setCurrentGuess] = useState('');
   const [guesses, setGuesses] = useState([]);
   const [guessesLeft, setGuessesLeft] = useState(10);
-  const [score, setScore] = useState(100);
-  const [exacts, setExacts] = useState(null);
-  const [partials, setPartials] = useState(null);
+  const [score, setScore] = useState(110);
+  const [exacts, setExacts] = useState(0);
+  const [partials, setPartials] = useState(0);
   const [hasWon, setHasWon] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [userScores, setUserScores] = useState(null);
@@ -24,7 +24,7 @@ export default function Game({ googleId, nickname, setGoogleId, setNickname }) {
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [currentView, setCurrentView] = useState('game');
   const [isGameSaved, setIsGameSaved] = useState(false);
-  const [isFirstGuess, setIsFirstGuess] = useState(true);
+  const [isCorrectGuess, setIsCorrectGuess] = useState(false);
 
   const renderViewButtons = () => (
     <div className="button-container">
@@ -97,42 +97,43 @@ export default function Game({ googleId, nickname, setGoogleId, setNickname }) {
     setGuesses([]);
     setGuessesLeft(10);
     setScore(100);
-    setExacts(null);
-    setPartials(null);
+    setExacts(0);
+    setPartials(0);
     setHasWon(false);
     setShowOptions(false);
+    setIsCorrectGuess(false);
     setCurrentGuess('');
-    setIsGameSaved(false); // Reset save status when resetting the game
+    setIsGameSaved(false);
   }
+
 
   function handleGuess(e) {
     e.preventDefault();
-    if (exacts === 4 && isFirstGuess) {
+    if (exacts === 4) {
       setScore(100);
       setHasWon(true);
       setShowOptions(true);
       return;
     }
-  
+
     if (guessesLeft > 0) {
       countMatches();
       setGuesses([...guesses, { guess: currentGuess, exacts, partials }]);
-  
+
       if (exacts === 4) {
         setHasWon(true);
         setShowOptions(true);
       } else if (guessesLeft === 1) {
         setShowOptions(true);
       }
-  
+
       // Deduct 10 points for each guess
       const newScore = Math.max(0, score - 10);
       setScore(newScore);
-  
+
       setGuessesLeft((prevGuessesLeft) => prevGuessesLeft - 1);
-      setIsFirstGuess(false); // Set isFirstGuess to false after the first guess
     }
-  
+
     setCurrentGuess('');
   }
 
@@ -320,7 +321,7 @@ export default function Game({ googleId, nickname, setGoogleId, setNickname }) {
                   type="text"
                   maxLength={4}
                   value={currentGuess}
-                  onChange={(e) => setCurrentGuess(e.target.value)}
+                  onChange={(e) => setCurrentGuess(e.target.value.toUpperCase())}
                   disabled={hasWon || guessesLeft === 0} // Disable input when game is won or lost
                 />
                 <button

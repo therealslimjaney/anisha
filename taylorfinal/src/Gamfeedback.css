@@ -1,0 +1,26 @@
+.Gamefeedback {
+    font-size: 14px;
+    /* Adjust the font size as needed */
+    background-color: #f0f0f0;
+    /* Light background color */
+    padding: 10px;
+    /* Add padding for better visibility */
+    border-radius: 5px;
+    /* Optional: Add rounded corners */
+}
+
+/* Additional styles for the 'won' class */
+.Gamefeedback.won {
+    font-weight: bold;
+    /* Make the text bold for the winning message */
+    color: green;
+    /* Change the text color for the winning message */
+}
+
+/* Additional styles for the 'lost' class */
+.Gamefeedback.lost {
+    font-weight: bold;
+    /* Make the text bold for the losing message */
+    color: red;
+    /* Change the text color for the losing message */
+}

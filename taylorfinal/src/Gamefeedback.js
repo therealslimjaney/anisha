@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Gamefeedback component renders feedback based on the game state.
  * @param {number} guesses - The remaining attempts in the game.
@@ -13,7 +15,13 @@ export default function Gamefeedback({ guesses, score, hasWon, secretCode }) {
   // Add 'won' class and display winning message if the player has won
   if (hasWon) {
     feedbackClass += " won";
-    return <div>Congratulations, you have won!</div>;
+    return (
+      <div>
+        Congratulations, you have won!
+        <br />
+        Your Score: {score}
+      </div>
+    );
   }
 
   // Add 'lost' class and display losing message with secret code if no remaining attempts

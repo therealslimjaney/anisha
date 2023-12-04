@@ -1,8 +1,3 @@
-/**
- * TopScores component displays top scores fetched from the server with pagination.
- * @param {function} goBackToGame - Callback function to navigate back to the game.
- * @returns {JSX.Element} - Rendered top scores with pagination controls.
- */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
@@ -20,7 +15,6 @@ const TopScores = ({ goBackToGame }) => {
         try {
             const response = await axios.get(`https://endtoend-405500.uw.r.appspot.com/topOverallScores?page=${page - 1}&size=${pageSize}`);
             setTotalPages(response.data.totalPages);
-            // Assuming the response structure includes a 'content' property containing the array of GameRecord
             const { content } = response.data;
             setTopScores(content);
         } catch (error) {
@@ -28,7 +22,7 @@ const TopScores = ({ goBackToGame }) => {
         }
     };
 
-    // Fetch top scores on component mount or when current page changes
+    // Fetch top scores on component mount or when the current page changes
     useEffect(() => {
         fetchTopScores(currentPage);
     }, [currentPage]);
@@ -51,7 +45,6 @@ const TopScores = ({ goBackToGame }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* Render your top scores list here */}
                     {topScores.map((gameRecord, index) => (
                         <tr key={gameRecord.id} className={`table-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
                             <td>{gameRecord.googleId}</td>
@@ -83,3 +76,4 @@ const TopScores = ({ goBackToGame }) => {
 };
 
 export default TopScores;
+

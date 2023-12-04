@@ -1,3 +1,6 @@
+import React from 'react';
+import './Guesses.css'; // Import the CSS file
+
 /**
  * Guesses component renders a list of guesses with their exact and partial matches.
  * @param {Array} guesses - Array of guess objects containing guess data.
@@ -9,7 +12,7 @@ export default function Guesses({ guesses, exacts, partials }) {
   return (
     <ul className="Guesses">
       {guesses.map((guessData, index) => (
-        <li key={index}>
+        <li key={index} className="guess-item">
           <span className="guess-text">{guessData.guess}</span> - Exact matches: <span className="matches">{exacts}</span>, Partial matches: <span className="matches">{partials}</span>
         </li>
       ))}

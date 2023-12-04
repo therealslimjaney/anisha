@@ -48,6 +48,7 @@ const MyScores = ({ googleId }) => {
     // Render user game records, delete buttons, and pagination controls
     return (
         <div>
+            <br />
             <h4>Your Game Records</h4>
             <div className="my-scores-container">
                 <table className="my-scores">

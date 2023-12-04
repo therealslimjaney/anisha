@@ -1,20 +1,26 @@
 .Guesses {
-    list-style-type: none;
-    padding: 10px;
-    background-color: #bbb4e8;
-    border-radius: 10px; /* Add border-radius for rounded edges */
-    overflow: hidden; /* Ensure the border-radius is applied */
-  }
-  
-  .Guesses li {
-    font-size: 24px; /* Adjust the font size as needed */
-  }
-  
-  .guess-text {
-    font-weight: bold; /* Make the guess text bold */
-  }
-  
-  .matches {
-    font-weight: bold; /* Make the matches text bold */
-    color: #3e3967; /* Set the color for matches text */
-  }
+  list-style-type: none;
+  padding: 10px;
+  background-color: #bbb4e8;
+  border-radius: 10px;
+  /* Add border-radius for rounded edges */
+  overflow: hidden;
+  /* Ensure the border-radius is applied */
+}
+
+.Guesses li {
+  font-size: 24px;
+  /* Adjust the font size as needed */
+}
+
+.guess-text {
+  font-weight: bold;
+  /* Make the guess text bold */
+}
+
+.matches {
+  font-weight: bold;
+  /* Make the matches text bold */
+  color: #3e3967;
+  /* Set the color for matches text */
+}

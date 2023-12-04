@@ -1,43 +1,50 @@
 .table-container {
-    margin: 20px auto; /* Center the table */
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse; /* Remove spaces between table cells */
-  }
-  
-  .table th, .table td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .table th {
-    background-color:#3e3967; /* Header background color */
-    color: #ffffff; /* Header text color */
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  }
-  
-  .table td {
-    background-color: #7169ac; /* Cell background color */
-    color: #ffffff; /* Cell text color */
-    border-bottom: 1px solid #3e3967; /* Border between rows */
-  }
-  
-  .table-row:nth-child(even) td {
-    background-color: #b9b5d6; /* Set the background color for the second row */
-  }
+  margin: 5px;
+}
+
+.table {
+  border-collapse: collapse;
+  /* Remove spaces between table cells */
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  /* Adjusted padding for a smaller size */
+  text-align: left;
+  font-size: 24px;
+  /* Add or adjust the font size for the text in the table */
+}
+
+.table th {
+  background-color: #3e3967;
+  /* Header background color */
+  color: #ffffff;
+  /* Header text color */
+  border-top-left-radius: 8px;
+  /* Adjusted border-radius for a slightly larger size */
+  border-top-right-radius: 8px;
+  /* Adjusted border-radius for a slightly larger size */
+}
+
+.table td {
+  background-color: #7169ac;
+  /* Cell background color */
+  color: #ffffff;
+  /* Cell text color */
+  border-bottom: 1px solid #3e3967;
+  /* Border between rows */
+}
+
+.table-row:nth-child(even) td {
+  background-color: #b9b5d6;
+  /* Set the background color for the second row */
+}
 
 .button-container-scores {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-
   display: flex;
-
-  align-items: center;
-
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .button-container-scores button {
@@ -46,7 +53,9 @@
   color: #fff;
   border: 2px solid #fff;
   padding: 10px 20px;
-  font-size: 18px;
+  /* Adjusted padding for a slightly larger size */
+  font-size: 24px;
+  /* Adjusted font size for a slightly larger size */
   cursor: pointer;
   border-radius: 5px;
 }
@@ -54,5 +63,3 @@
 .button-container-scores button:hover {
   background: #6a5acd;
 }
-
-  
